@@ -32,14 +32,8 @@ def select(SQL, cursor):
         
 def insert(cursor):
     SQL = "INSERT INTO certificates (name, person_id) VALUES (%s, %s);"
-    data = ("Azure", "2")
+    data = ('Azure', 7)
     cursor.execute(SQL, data)
-    colnames = [desc[0] for desc in cursor.description]
-    print(colnames)
-    row = cursor.fetchone()
-    while row is not None:
-        print(row)
-        row = cursor.fetchone()
 
         
 if __name__ == '__main__':
