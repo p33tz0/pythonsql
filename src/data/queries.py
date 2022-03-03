@@ -1,3 +1,4 @@
+import psycopg2
 
 def connect():
     con = None
