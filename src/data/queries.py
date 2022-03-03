@@ -11,7 +11,10 @@ def connect():
         con = psycopg2.connect(**config())
         cursor = con.cursor()
         
-        updateperson(30, 2, cursor)
+        #insert("jorma", 2590, cursor)
+        #updateperson(30, 2, cursor)
+        #createtable(cursor)
+        transaction("jorma", 200, cursor)
         con.commit()
         cursor.close()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -32,9 +35,9 @@ def select(SQL, cursor):
         row = cursor.fetchone()
         
         
-def insert(serti, id, cursor):
-    SQL = "INSERT INTO certificates (name, person_id) VALUES (%s, %s);"
-    data = (f"{serti}", id)
+def insert(nimi, raha, cursor):
+    SQL = "INSERT INTO pankki1 (name, rahat) VALUES (%s, %s);"
+    data = (f"{nimi}", raha)
     cursor.execute(SQL, data)
     
 def updateperson(age, id, cursor):
@@ -42,7 +45,13 @@ def updateperson(age, id, cursor):
     data = (age, id)
     cursor.execute(SQL, data)
     
-
-        
+def createtable(cursor):
+    SQL = "CREATE TABLE pankki2 (PersonID SERIAL PRIMARY KEY, name varchar(255) NOT NULL, rahat INT);"
+    cursor.execute(SQL)
+    
+def transaction(nimi, rahat, cursor):
+    SQL = "BEGIN; UPDATE pankki2 SET rahat = rahat + %s WHERE name = %s; UPDATE pankki1 SET rahat = rahat - %s WHERE name = %s; COMMIT;"
+    data = (rahat, f"{nimi}", rahat, f"{nimi}")
+    cursor.execute(SQL, data)
 if __name__ == '__main__':
     connect()
