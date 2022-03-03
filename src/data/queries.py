@@ -10,7 +10,9 @@ def connect():
     try:
         con = psycopg2.connect(**config())
         cursor = con.cursor()
-        insert(cursor)
+        
+        updateperson(30, 2, cursor)
+        con.commit()
         cursor.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -30,10 +32,16 @@ def select(SQL, cursor):
         row = cursor.fetchone()
         
         
-def insert(cursor):
+def insert(serti, id, cursor):
     SQL = "INSERT INTO certificates (name, person_id) VALUES (%s, %s);"
-    data = ('Azure', 7)
+    data = (f"{serti}", id)
     cursor.execute(SQL, data)
+    
+def updateperson(age, id, cursor):
+    SQL = "UPDATE person SET age = %s WHERE id = %s;"
+    data = (age, id)
+    cursor.execute(SQL, data)
+    
 
         
 if __name__ == '__main__':
